@@ -109,8 +109,9 @@ func ExitIf(err error) {
 }
 
 func varargsToStr(v ...interface{}) string {
-  s := fmt.Sprintf("%v", v)
-  s = s[1 : len(s)-1] // remove '[' and ']'
+  s := fmt.Sprint(v)
+  s = s[2 : len(s)-2] // remove "[[" and "]]"
+  fmt.Println(s)
   return s
 }
 

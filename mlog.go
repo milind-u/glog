@@ -1,10 +1,11 @@
-// Google-Style Logger, wrapper around github.com/golang/glog with some additional functions, but not all functions
-// in github.com/golang/glog.
+// Package mlog is a Google-Style Logger, wrapper around github.com/golang/glog with some additional functions,
+// but not all functions in github.com/golang/glog.
 package mlog
 
 import (
   "flag"
   "fmt"
+  "math"
 
   "github.com/golang/glog"
 )
@@ -24,7 +25,6 @@ const (
 )
 
 var (
-
   // Info is equivalent to glog.Info
   Info = glog.Info
 
@@ -111,7 +111,6 @@ func ExitIf(err error) {
 func varargsToStr(v ...interface{}) string {
   s := fmt.Sprint(v)
   s = s[2 : len(s)-2] // remove "[[" and "]]"
-  fmt.Println(s)
   return s
 }
 
@@ -133,6 +132,11 @@ func CheckEq(a, b interface{}, v ...interface{}) {
   checkOperator(a, b, a == b, "==", v...)
 }
 
+// CheckNe checks if a != b and calls Fatalf with a, b, and v if a == b
+func CheckNe(a, b interface{}, v ...interface{}) {
+  checkOperator(a, b, a != b, "!=", v...)
+}
+
 // CheckLt checks if a < b and calls Fatalf with a, b, and v if a >= b
 func CheckLt(a, b float64, v ...interface{}) {
   checkOperator(a, b, a < b, "<", v...)
@@ -151,4 +155,12 @@ func CheckLe(a, b float64, v ...interface{}) {
 // CheckGe checks if a >= b and calls Fatalf with a, b, and v if a < b
 func CheckGe(a, b float64, v ...interface{}) {
   checkOperator(a, b, a >= b, ">=", v...)
+}
+
+// CheckNear checks if |a - b| <= threshold and calls Fatalf with a, b, and v if not
+func CheckNear(a, b, threshold float64, v ...interface{}) {
+  if diff := math.Abs(a - b); diff > threshold {
+    Fatalf("Check Failed:\nthe difference between %v and %v, %v, exceeds the threshold %v\n%v\n",
+      a, b, diff, threshold, varargsToStr(v))
+  }
 }

@@ -1,4 +1,4 @@
-module github.com/milind-u/mlog
+module github.com/milind-u/glog
 
 go 1.16
 

@@ -1,79 +1,54 @@
-// Package mlog is a Google-Style Logger, wrapper around github.com/golang/glog with some additional functions,
+// Package glog is a Google-Style Logger, wrapper around github.com/golang/glog with some additional functions,
 // but not all functions in github.com/golang/glog.
-package mlog
+package glog
 
 import (
   "flag"
   "fmt"
   "math"
 
-  "github.com/golang/glog"
+  g "github.com/golang/glog"
 )
 
-// Level is a logging level, and is different from the glog.Level levels for glog.V logs
-type Level int8
+// Severity is a logging severity
+type Severity uint8
 
 const (
-  // LInfo is the Level for Info logs
-  LInfo Level = iota
-  // LWarning is the  Level for Warning logs
-  LWarning
-  // LError is the Level for Error logs
-  LError
-  // LFatal is the Level for Fatal logs
-  LFatal
+  // InfoSeverity is the Severity for Info logs
+  InfoSeverity Severity = iota
+  // WarningSeverity is the  Severity for Warning logs
+  WarningSeverity
+  // ErrorSeverity is the Severity for Error logs
+  ErrorSeverity
+  // FatalSeverity is the Severity for Fatal logs
+  FatalSeverity
 )
 
 var (
-  // Info is equivalent to glog.Info
-  Info = glog.Info
+  Info   = g.Info
+  Infof  = g.Infof
+  Infoln = g.Infoln
 
-  // Infof is equivalent to glog.Infof
-  Infof = glog.Infof
+  Warning   = g.Warning
+  Warningf  = g.Warningf
+  Warningln = g.Warningln
 
-  // Infoln is equivalent to glog.Infoln
-  Infoln = glog.Infoln
+  Error   = g.Error
+  Errorf  = g.Errorf
+  Errorln = g.Errorln
 
-  // Warning is equivalent to glog.Warning
-  Warning = glog.Warning
+  Fatal   = g.Fatal
+  Fatalf  = g.Fatalf
+  Fatalln = g.Fatalln
 
-  // Warningf is equivalent to glog.Warningf
-  Warningf = glog.Warningf
-
-  // Warningln is equivalent to glog.Warningln
-  Warningln = glog.Warningln
-
-  // Error is equivalent to glog.Error
-  Error = glog.Error
-
-  // Errorf is equivalent to glog.Errorf
-  Errorf = glog.Errorf
-
-  // Errorln is equivalent to glog.Errorln
-  Errorln = glog.Errorln
-
-  // Fatal is equivalent to glog.Fatal
-  Fatal = glog.Fatal
-
-  // Fatalf is equivalent to glog.Fatalf
-  Fatalf = glog.Fatalf
-
-  // Fatalln is equivalent to glog.Fatalln
-  Fatalln = glog.Fatalln
-
-  // Exit is equivalent to glog.Exit
-  Exit = glog.Exit
-
-  // Exitf is equivalent to glog.Exitf
-  Exitf = glog.Exitf
-
-  // Exitln is equivalent to glog.Exitln
-  Exitln = glog.Exitln
+  Exit   = g.Exit
+  Exitf  = g.Exitf
+  Exitln = g.Exitln
 )
 
-// SetLevel sets the minimum logging level to be the given level
-func SetLevel(level Level) {
-  WarningIf(flag.Set("stderrthreshold", fmt.Sprint(level)))
+// SetSeverity sets the minimum logging severity to be the given severity
+func SetSeverity(severity Severity) {
+  WarningIf(flag.Set("stderrthreshold", fmt.Sprint(severity)))
   flag.Parse()
 }
 
